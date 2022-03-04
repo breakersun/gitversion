@@ -136,26 +136,35 @@ class _CHeaderFormatter(_Formatter):
 #ifndef _GITVERSION_VERSION_H
 #define _GITVERSION_VERSION_H
 
-extern const char *VERSION_STRING;
-extern const char *GIT_TAG_NAME;
-extern const unsigned int GIT_COMMITS_SINCE_TAG;
-extern const char *GIT_COMMIT_ID;
-extern bool MODIFIED_SINCE_COMMIT;
-extern bool IS_DEV_VERSION;
-
+#define VERSION_STRING          ("%s")
+#define GIT_TAG_NAME            ("%s")
+#define GIT_COMMITS_SINCE_TAG   (%d)
+#define GIT_COMMIT_ID           ("%s")
+#define MODIFIED_SINCE_COMMIT   (%s)
+#define IS_DEV_VERSION          (%s)
+%s
 #endif
-"""
+""" % (version_info.version_string, version_info.git_tag_name, version_info.git_commits_since_tag,
+       version_info.git_commit_id, version_info.modified_since_commit, version_info.is_dev, other_variables)
 
     def is_stable_formatter(self, is_stable):
-        return """
-   constexpr bool IS_STABLE_VERSION = %s;
- """ % str(is_stable).lower()
+        return "\n#define IS_STABLE_VERSION       (%s)" % str(is_stable).lower()
 
     def tag_interpretation_formatter(self, tag_interpretation, version_components):
-        return """
-   constexpr const char *VERSION_COMPONENTS[] = %s;
-   constexpr const char *VERSION_TAG = "%s";
- """ % (version_components, tag_interpretation.version_tag)
+        output = ''
+        try:
+            output += "\n#define MAJOR_VERSION           (%s)" % (version_components[0])
+        except IndexError:
+            return output
+        try:
+            output += "\n#define MINOR_VERSION           (%s)" % (version_components[1])
+        except IndexError:
+            return output
+        try:
+            output += "\n#define PATCH_VERSION           (%s)" % (version_components[2])
+        except IndexError:
+            return output
 
     def version_components_formatter(self, version_components):
-        return "{\"" + "\", \"".join(version_components) + "\"}"
+        # return "{\"" + "\", \"".join(version_components) + "\"}"
+        return version_components
