@@ -14,7 +14,7 @@ except ImportError:
 def run_main():
     parser = argparse.ArgumentParser(description="Create a source file containing git version information.")
     parser.add_argument('--version', action='version', version=Version.VERSION_STRING)
-    parser.add_argument('--lang', choices=['cpp', 'python', 'header'], required=True)
+    parser.add_argument('--lang', choices=['cpp', 'python', 'c'], required=True)
     parser.add_argument('--dir', default='.')
     parser.add_argument('file')
     args = parser.parse_args()
