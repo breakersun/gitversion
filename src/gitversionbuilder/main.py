@@ -16,6 +16,8 @@ def _output(version_info, lang):
         return versioninfooutputter.to_cpp(version_info)
     elif lang == "python":
         return versioninfooutputter.to_python(version_info)
+    elif lang == "header":
+        return versioninfooutputter.to_c_header(version_info)
     else:
         raise ValueError("Unknown language")
 
